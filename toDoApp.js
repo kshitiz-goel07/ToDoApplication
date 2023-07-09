@@ -19,7 +19,7 @@ app.post("/todos",(req,res)=>{
     description: req.body.description
   }
   toDo.push(newToDo);
-  console.log("your toDo is ", toDo);
+  console.log("ToDo is ", toDo);
 
   return res.status(200).send();
 } )
