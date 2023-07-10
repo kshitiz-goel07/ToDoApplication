@@ -55,35 +55,6 @@ app.post("/todos",(req,res)=>{
     })
 })
 
-app.delete("/todos/:id",(req,res)=>{
-    fs.readFile("list.json","utf-8",(err,data)=>{
-        if(err){
-            return err;
-        }
-        else{
-            const toDo = JSON.parse(data);
-            // const index = toDo.findIndex(i => i.id === req.params.id);
-            var index = findIndex(toDo);
-            console.log("index is ",index);
-            if(index === -1){
-                return res.status(400).send();
-            }
-            else{
-            toDo.splice(index,1);
-            fs.writeFile("list.json",JSON.stringify(toDo),(err,data)=>{
-                if(err){
-                    return err;
-                }
-                else{
-                    console.log("todo list is",toDo);
-                 return res.status(200).send();
-                }
-            })
-            }
-        }
-    })
-})
-
 app.listen(3000);
 
 // let toDo = [];
