@@ -1,10 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const cors = require('cors');
 
 const app = express();
 
+app.use(cors());
+
 app.use(bodyParser.json());
+
+function findIndex(arr){
+    for(var i=0;i<arr.length;i++){
+        if(arr[i].id === req.params.id){
+            return i;
+        }
+        return -1;
+    }
+}
 
 app.get('/todos', (req,res)=>{
     fs.readFile("list.json","utf-8",(err,data)=>{
@@ -39,6 +51,35 @@ app.post("/todos",(req,res)=>{
                     res.status(201).json(newToDo);
                 }
             })
+        }
+    })
+})
+
+app.delete("/todos/:id",(req,res)=>{
+    fs.readFile("list.json","utf-8",(err,data)=>{
+        if(err){
+            return err;
+        }
+        else{
+            const toDo = JSON.parse(data);
+            // const index = toDo.findIndex(i => i.id === req.params.id);
+            var index = findIndex(toDo);
+            console.log("index is ",index);
+            if(index === -1){
+                return res.status(400).send();
+            }
+            else{
+            toDo.splice(index,1);
+            fs.writeFile("list.json",JSON.stringify(toDo),(err,data)=>{
+                if(err){
+                    return err;
+                }
+                else{
+                    console.log("todo list is",toDo);
+                 return res.status(200).send();
+                }
+            })
+            }
         }
     })
 })
