@@ -9,13 +9,23 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-function findIndex(arr){
-    for(var i=0;i<arr.length;i++){
-        if(arr[i].id === req.params.id){
-            return i;
+function findIndex(arr, id){
+    for(let i=0;i<arr.length;i++){
+        if(arr[i].id == id){
+            return i; 
         }
-        return -1;
     }
+    return -1;
+}
+
+function removeIndex(arr, index){
+    let newArray = [];
+    for(let i=0;i<arr.length;i++){
+        if(i != index){
+            newArray.push(arr[i]);
+        }
+    }
+    return newArray;
 }
 
 app.get('/todos', (req,res)=>{
@@ -54,6 +64,30 @@ app.post("/todos",(req,res)=>{
         }
     })
 })
+
+app.delete("/todos/:id",(req,res)=>{
+    fs.readFile("list.json","utf-8",(err,data)=>{
+        if(err){
+            return err;
+        }
+        else{
+            var toDoList = JSON.parse(data);
+          const index = findIndex(toDoList, parseInt(req.params.id));
+          if(index === -1){
+            res.status(404).send();
+          }
+          else{
+         toDoList = removeIndex(toDoList, index);
+         fs.writeFile("list.json", JSON.stringify(toDoList), (err)=>{
+            if(err){
+                throw err
+            }
+            res.status(200).send();
+         });
+          }
+        }
+    });
+});
 
 app.listen(3000);
 

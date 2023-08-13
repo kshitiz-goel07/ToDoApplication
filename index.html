@@ -80,7 +80,6 @@
 
         var grandChild3 = document.createElement("button");
         grandChild3.innerHTML = "delete"
-        grandChild3.setAttribute("onClick","onDelete("+ data[i].id  +")");
         childHTML.appendChild(grandChild3);
 
         parentHTML.appendChild(childHTML);
@@ -89,7 +88,7 @@
     function onDelete(id){
         fetch("http://localhost:3000/todos/"+id,{
             method: "DELETE"
-        }).then(deleteDone)
+        }).then(deleteDone) 
     }
 
     function deleteDone(){
